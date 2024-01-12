@@ -23,63 +23,73 @@ pd_subset = pd.isnull().sum()
 pd_subset
 
 
-# In[4]:
+# In[46]:
 
 
 intro_total = pd["intro"].sum()
+est_intro_previous = 10
+intro_total = intro_total + est_intro_previous
 intro_total
 
 
-# In[5]:
+# In[47]:
 
 
 verse1_total = pd["verse1"].sum()
 verse1_total
 
 
-# In[6]:
+# In[48]:
 
 
 solo1_total = pd["solo1"].sum()
 solo1_total
 
 
-# In[7]:
+# In[49]:
 
 
 solo2_total = pd["solo2"].sum()
 solo2_total
 
 
-# In[8]:
+# In[50]:
 
 
-solo_total = solo1_total + solo2_total
+est_solo_previous = 155
+
+
+# In[51]:
+
+
+solo_total = solo1_total + solo2_total + est_solo_previous
 solo_total
 
 
-# In[9]:
+# In[52]:
 
 
 verse2_total = pd["verse2"].sum()
+est_verse2_previous = 10
+verse2_total = verse2_total + est_verse2_previous
 verse2_total
 
 
-# In[10]:
+# In[53]:
 
 
 outro_total = pd["outro"].sum()
 outro_total
 
 
-# In[11]:
+# In[54]:
 
 
 compositing_total = pd["compositing"].sum()
 compositing_total
 
 
-# In[12]:
+# In[55]:
 
 
 sunday_subset = pd[pd["day"] == "sunday"]
@@ -96,7 +106,7 @@ sunday_total = sunday_subset_intro_total + sunday_subset_verse1_total + sunday_s
 sunday_mean = round((sunday_total / 38), 2)
 
 
-# In[13]:
+# In[56]:
 
 
 monday_subset = pd[pd["day"] == "monday"]
@@ -113,7 +123,7 @@ monday_total = monday_subset_intro_total + monday_subset_verse1_total + monday_s
 monday_mean = round((monday_total / 38), 2)
 
 
-# In[14]:
+# In[57]:
 
 
 tuesday_subset = pd[pd["day"] == "tuesday"]
@@ -130,7 +140,7 @@ tuesday_total = tuesday_subset_intro_total + tuesday_subset_verse1_total + tuesd
 tuesday_mean = round((tuesday_total / 38), 2)
 
 
-# In[15]:
+# In[58]:
 
 
 wednesday_subset = pd[pd["day"] == "wednesday"]
@@ -147,7 +157,7 @@ wednesday_total = wednesday_subset_intro_total + wednesday_subset_verse1_total +
 wednesday_mean = round((wednesday_total / 38), 2)
 
 
-# In[16]:
+# In[59]:
 
 
 thursday_subset = pd[pd["day"] == "thursday"]
@@ -164,7 +174,7 @@ thursday_total = thursday_subset_intro_total + thursday_subset_verse1_total + th
 thursday_mean = round((thursday_total / 37), 2)
 
 
-# In[17]:
+# In[60]:
 
 
 friday_subset = pd[pd["day"] == "friday"]
@@ -181,7 +191,7 @@ friday_total = friday_subset_intro_total + friday_subset_verse1_total + friday_s
 friday_mean = round((friday_total / 37), 2)
 
 
-# In[18]:
+# In[61]:
 
 
 saturday_subset = pd[pd["day"] == "saturday"]
@@ -198,7 +208,7 @@ saturday_total = saturday_subset_intro_total + saturday_subset_verse1_total + sa
 saturday_mean = round((saturday_total / 38), 2)
 
 
-# In[19]:
+# In[68]:
 
 
 day = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"]
@@ -220,7 +230,7 @@ ax.set_title("Average Hours Worked Per Day")
 plt.show()
 
 
-# In[20]:
+# In[63]:
 
 
 pd_line = pd
@@ -230,7 +240,7 @@ pd_week = pd_line
 pd_week
 
 
-# In[21]:
+# In[64]:
 
 
 df_weektotal = pd_week
@@ -242,21 +252,54 @@ df_weektotal = df_weektotal["week total"].dropna()
 df_weektotal
 
 
-# In[22]:
+# In[65]:
 
 
-plt.plot(df_weektotal)
+from scipy.interpolate import make_interp_spline, BSpline
+
+x = list(range(1, 40))
+y = []
+
+for i in df_weektotal:
+    y.append(i)
+    
+arr_x = np.array(x)
+arr_y = np.array(y)
+
+xnew = np.linspace(arr_x.min(), arr_x.max(), 200) 
+
+spl = make_interp_spline(arr_x, arr_y, k=3)
+y_smooth = spl(xnew)
+
+font = {
+    "size": 8
+}
+
+plt.plot(xnew, y_smooth)
+
+plt.text(1.8, 32, " Classes", fontdict = font)
+plt.axvspan(0, 6, color='gray', alpha=0.5)
+
+plt.text(14.9, 32, "Vacation", fontdict = font)
+plt.axvspan(13.5, 18.5, color='gray', alpha=0.5)
+
+
+plt.text(31.5, 32, "Classes", fontdict = font)
+plt.axvspan(25, 40, color='gray', alpha=0.5)
+
+
 plt.ylabel("Hours Worked")
 plt.xlabel("Week # (April-December)")
-plt.figure(figsize=(500,10))
-plt.show()
+plt.title("Avg. Hours Worked Per Week")
+plt.figure(figsize=(40, 10))
+plt.show() 
 
 
-# In[44]:
+# In[66]:
 
 
-sections = [intro_total, verse1_total, solo1_total, solo2_total, verse2_total, outro_total]
-labels = ["Intro", "Verse 1", "Gtr Solo 1", "Gtr Solo 2", "Verse 2", "Outro"]
+sections = [intro_total, verse1_total, solo_total, verse2_total, outro_total]
+labels = ["Intro", "Verse 1", "Gtr Solo", "Verse 2", "Outro"]
 
 fig, ax = plt.subplots(figsize=(7, 5))
 
@@ -270,10 +313,4 @@ plt.setp(autotexts, size = 8, weight = "bold")
 ax.set_title("Breakdown of Hours Per Song Section")
 
 plt.show()
-
-
-# In[ ]:
-
-
-
 
