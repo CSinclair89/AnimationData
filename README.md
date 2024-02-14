@@ -8,7 +8,7 @@ Full report can be found at the following link: http://chrisso.tv/pdf/AnimReport
 
 - Learn more Python and demonstrate sorting/visualization techniques that further develop an understanding of the libraries used, specifically: Pandas, Matplotlib, NumPy, and SciPy.
 - Find which day of the weekday I had the highest average amount of hours worked.
-- See overall trends in effort based on external factors (classes/vacations) throughout the year.
+- View overall trends in effort based on external factors (classes/vacations) throughout the year.
 - Finish with a pie chart to show the percentages of how much time was spent on each particular section of the song.
 - Describe the process of each of these data points, analyze any interesting traits about the data.
 
