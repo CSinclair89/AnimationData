@@ -2,8 +2,7 @@
 
 This is a breakdown of the data gathered from my animation work on a full 7-minute music video to celebrate the 50th anniversary release of Pink Floyd's 1973 album, "The Dark Side of the Moon". Hours of work were tracked every day, separated into specific fields outlining each individual section of the song.
 
-Full report can be found at the link below:
-http://chrisso.tv/pdf/AnimReport.pdf
+Full report can be found at the following link: http://chrisso.tv/pdf/AnimReport.pdf
 
 ## Goals
 
