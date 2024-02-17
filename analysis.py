@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # coding: utf-8
 
-# In[35]:
+# In[57]:
 
 
 import matplotlib.pyplot as plt
@@ -10,21 +10,21 @@ import pandas as pd
 from scipy.interpolate import make_interp_spline, BSpline
 
 
-# In[2]:
+# In[58]:
 
 
 pd = pd.read_csv("data/hours.csv")
 pd
 
 
-# In[3]:
+# In[59]:
 
 
 pd_subset = pd.isnull().sum()
 pd_subset
 
 
-# In[4]:
+# In[60]:
 
 
 intro_total = pd["intro"].sum()
@@ -33,41 +33,41 @@ intro_total = intro_total + est_intro_previous
 intro_total
 
 
-# In[5]:
+# In[61]:
 
 
 verse1_total = pd["verse1"].sum()
 verse1_total
 
 
-# In[6]:
+# In[62]:
 
 
 solo1_total = pd["solo1"].sum()
 solo1_total
 
 
-# In[7]:
+# In[63]:
 
 
 solo2_total = pd["solo2"].sum()
 solo2_total
 
 
-# In[8]:
+# In[64]:
 
 
 est_solo_previous = 200
 
 
-# In[9]:
+# In[65]:
 
 
 solo_total = solo1_total + solo2_total + est_solo_previous
 solo_total
 
 
-# In[10]:
+# In[66]:
 
 
 verse2_total = pd["verse2"].sum()
@@ -76,21 +76,21 @@ verse2_total = verse2_total + est_verse2_previous
 verse2_total
 
 
-# In[11]:
+# In[67]:
 
 
 outro_total = pd["outro"].sum()
 outro_total
 
 
-# In[12]:
+# In[68]:
 
 
 compositing_total = pd["compositing"].sum()
 compositing_total
 
 
-# In[13]:
+# In[69]:
 
 
 sunday_subset = pd[pd["day"] == "sunday"]
@@ -108,7 +108,7 @@ sunday_total = sunday_subset_intro_total + sunday_subset_verse1_total + sunday_s
 sunday_mean = round((sunday_total / 38), 2)
 
 
-# In[14]:
+# In[70]:
 
 
 monday_subset = pd[pd["day"] == "monday"]
@@ -126,7 +126,7 @@ monday_total = monday_subset_intro_total + monday_subset_verse1_total + monday_s
 monday_mean = round((monday_total / 38), 2)
 
 
-# In[15]:
+# In[71]:
 
 
 tuesday_subset = pd[pd["day"] == "tuesday"]
@@ -144,7 +144,7 @@ tuesday_total = tuesday_subset_intro_total + tuesday_subset_verse1_total + tuesd
 tuesday_mean = round((tuesday_total / 38), 2)
 
 
-# In[16]:
+# In[72]:
 
 
 wednesday_subset = pd[pd["day"] == "wednesday"]
@@ -162,7 +162,7 @@ wednesday_total = wednesday_subset_intro_total + wednesday_subset_verse1_total +
 wednesday_mean = round((wednesday_total / 38), 2)
 
 
-# In[17]:
+# In[73]:
 
 
 thursday_subset = pd[pd["day"] == "thursday"]
@@ -180,7 +180,7 @@ thursday_total = thursday_subset_intro_total + thursday_subset_verse1_total + th
 thursday_mean = round((thursday_total / 37), 2)
 
 
-# In[18]:
+# In[74]:
 
 
 friday_subset = pd[pd["day"] == "friday"]
@@ -198,7 +198,7 @@ friday_total = friday_subset_intro_total + friday_subset_verse1_total + friday_s
 friday_mean = round((friday_total / 37), 2)
 
 
-# In[19]:
+# In[75]:
 
 
 saturday_subset = pd[pd["day"] == "saturday"]
@@ -216,7 +216,7 @@ saturday_total = saturday_subset_intro_total + saturday_subset_verse1_total + sa
 saturday_mean = round((saturday_total / 38), 2)
 
 
-# In[20]:
+# In[76]:
 
 
 day = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"]
@@ -238,26 +238,26 @@ ax.set_title("Average Hours Worked Per Day")
 plt.show()
 
 
-# In[25]:
+# In[77]:
 
 
 pd_line = pd
 pd_line["total"] = pd_line["intro"] + pd_line["verse1"] + pd_line["solo1"] + pd_line["solo2"] + pd_line["verse2"] + pd_line["outro"]
 
 
-# In[48]:
+# In[78]:
 
 
-df_weektotal = pd_week
+df_weektotal = pd_line
 
-for week in pd_week:
+for week in pd_line:
     pd_week["week total"] = pd_week["total"].groupby(pd_week["week"]).sum()
     
 df_weektotal = df_weektotal["week total"].dropna()
 df_weektotal
 
 
-# In[36]:
+# In[79]:
 
 
 total_x = list(range(1, 40))
@@ -295,202 +295,104 @@ plt.plot(total_xnew, total_y_smooth)
 plt.figure(figsize=(40, 10))
 
 
-# In[66]:
+# In[107]:
 
 
-# Weekly Totals for Intro Section
+# Weekly Totals for Each Section
 
-pd_line_intro = pd_line
-pd_line_intro["intro week total"] = pd_line["intro"]
-pd_line_intro
+pd_line
+pd_line["intro week total"] = pd_line["intro"]
+pd_line["verse1 week total"] = pd_line["verse1"]
+pd_line["solo total"] = pd_line["solo1"] + pd_line["solo2"]
+pd_line["verse2 week total"] = pd_line["verse2"]
+pd_line["outro week total"] = pd_line["outro"]
+pd_line["compositing week total"] = pd_line["compositing"]
+pd_line
 
-df_intro_weektotal = pd_line_intro
+df_weektotal = pd_line
 
-for week in df_intro_weektotal:
-    df_intro_weektotal["intro week total"] = df_intro_weektotal["intro"].groupby(df_intro_weektotal["week"]).sum()
+for week in df_weektotal:
+    df_weektotal["intro week total"] = df_weektotal["intro"].groupby(df_weektotal["week"]).sum()
+    df_weektotal["verse1 week total"] = df_weektotal["verse1"].groupby(df_weektotal["week"]).sum()
+    df_weektotal["solo week total"] = df_weektotal["solo total"].groupby(df_weektotal["week"]).sum()
+    df_weektotal["verse2 week total"] = df_weektotal["verse2"].groupby(df_weektotal["week"]).sum()
+    df_weektotal["outro week total"] = df_weektotal["outro"].groupby(df_weektotal["week"]).sum()
+    df_weektotal["compositing week total"] = df_weektotal["compositing"].groupby(df_weektotal["week"]).sum()
     
-df_intro_weektotal = df_intro_weektotal["intro week total"].dropna()
-df_intro_weektotal
+df_weektotal = df_weektotal.dropna()
 
 intro_x = list(range(1, 40))
 intro_y = []
-
-for i in df_intro_weektotal:
-    intro_y.append(i)
-    
-arr_intro_x = np.array(intro_x)
-arr_intro_y = np.array(intro_y)
-
-intro_xnew = np.linspace(arr_intro_x.min(), arr_intro_x.max(), 200) 
-
-spl = make_interp_spline(arr_intro_x, arr_intro_y, k=2)
-intro_y_smooth = spl(intro_xnew)
-
-
-# In[67]:
-
-
-# Weekly Totals for Verse 1 Section
-
-pd_line_verse1 = pd_line
-pd_line_verse1["verse1 week total"] = pd_line["verse1"]
-pd_line_verse1
-
-df_verse1_weektotal = pd_line_verse1
-
-for week in df_verse1_weektotal:
-    df_verse1_weektotal["verse1 week total"] = df_verse1_weektotal["verse1"].groupby(df_verse1_weektotal["week"]).sum()
-    
-df_verse1_weektotal = df_verse1_weektotal["verse1 week total"].dropna()
-df_verse1_weektotal
-
 verse1_x = list(range(1, 40))
 verse1_y = []
-
-for i in df_verse1_weektotal:
-    verse1_y.append(i)
-    
-arr_verse1_x = np.array(verse1_x)
-arr_verse1_y = np.array(verse1_y)
-
-verse1_xnew = np.linspace(arr_verse1_x.min(), arr_verse1_x.max(), 200) 
-
-spl = make_interp_spline(arr_verse1_x, arr_verse1_y, k=2)
-verse1_y_smooth = spl(verse1_xnew)
-
-
-# In[68]:
-
-
-# Weekly Totals for Guitar Solo
-
-pd_line_solo = pd_line
-pd_line_solo["solo total"] = pd_line["solo1"] + pd_line["solo2"]
-pd_line_solo
-
-df_solo_weektotal = pd_line_solo
-
-for week in df_solo_weektotal:
-    df_solo_weektotal["solo week total"] = df_solo_weektotal["solo total"].groupby(df_solo_weektotal["week"]).sum()
-    
-df_solo_weektotal = df_solo_weektotal["solo week total"].dropna()
-df_solo_weektotal
-
 solo_x = list(range(1, 40))
 solo_y = []
-
-for i in df_solo_weektotal:
-    solo_y.append(i)
-    
-arr_solo_x = np.array(solo_x)
-arr_solo_y = np.array(solo_y)
-
-solo_xnew = np.linspace(arr_solo_x.min(), arr_solo_x.max(), 200) 
-
-spl = make_interp_spline(arr_solo_x, arr_solo_y, k=2)
-solo_y_smooth = spl(solo_xnew)
-
-
-# In[69]:
-
-
-# Weekly Totals for Verse 2 Section
-
-pd_line_verse2 = pd_line
-pd_line_verse2["verse2 week total"] = pd_line["verse2"]
-pd_line_verse2
-
-df_verse2_weektotal = pd_line_verse2
-
-for week in df_verse2_weektotal:
-    df_verse2_weektotal["verse2 week total"] = df_verse2_weektotal["verse2"].groupby(df_verse2_weektotal["week"]).sum()
-    
-df_verse2_weektotal = df_verse2_weektotal["verse2 week total"].dropna()
-df_verse2_weektotal
-
 verse2_x = list(range(1, 40))
 verse2_y = []
-
-for i in df_verse2_weektotal:
-    verse2_y.append(i)
-    
-arr_verse2_x = np.array(verse2_x)
-arr_verse2_y = np.array(verse2_y)
-
-verse2_xnew = np.linspace(arr_verse2_x.min(), arr_verse2_x.max(), 200) 
-
-spl = make_interp_spline(arr_verse2_x, arr_verse2_y, k=2)
-verse2_y_smooth = spl(verse2_xnew)
-
-
-# In[70]:
-
-
-# Weekly Totals for Outro Section
-
-pd_line_outro = pd_line
-pd_line_outro["outro week total"] = pd_line["outro"]
-pd_line_outro
-
-df_outro_weektotal = pd_line_outro
-
-for week in df_outro_weektotal:
-    df_outro_weektotal["outro week total"] = df_outro_weektotal["outro"].groupby(df_outro_weektotal["week"]).sum()
-    
-df_outro_weektotal = df_outro_weektotal["outro week total"].dropna()
-df_outro_weektotal
-
 outro_x = list(range(1, 40))
 outro_y = []
-
-for i in df_outro_weektotal:
-    outro_y.append(i)
-    
-arr_outro_x = np.array(outro_x)
-arr_outro_y = np.array(outro_y)
-
-print(arr_outro_x)
-print(arr_outro_y)
-
-outro_xnew = np.linspace(arr_outro_x.min(), arr_outro_x.max(), 200) 
-
-spl = make_interp_spline(arr_outro_x, arr_outro_y, k=2)
-outro_y_smooth = spl(outro_xnew)
-
-
-# In[71]:
-
-
-# Weekly Totals for Compositing Section
-
-pd_line_compositing = pd_line
-pd_line_compositing["compositing week total"] = pd_line["compositing"]
-pd_line_compositing
-
-df_compositing_weektotal = pd_line_compositing
-
-for week in df_compositing_weektotal:
-    df_compositing_weektotal["compositing week total"] = df_compositing_weektotal["compositing"].groupby(df_compositing_weektotal["week"]).sum()
-    
-df_compositing_weektotal = df_compositing_weektotal["compositing week total"].dropna()
-df_compositing_weektotal
-
 compositing_x = list(range(1, 40))
 compositing_y = []
 
-for i in df_compositing_weektotal:
+for i in df_weektotal["intro week total"]:
+    intro_y.append(i)
+    
+for i in df_weektotal["verse1 week total"]:
+    verse1_y.append(i)
+    
+for i in df_weektotal["solo week total"]:
+    solo_y.append(i)
+    
+for i in df_weektotal["verse2 week total"]:
+    verse2_y.append(i)
+    
+for i in df_weektotal["outro week total"]:
+    outro_y.append(i)
+    
+for i in df_weektotal["compositing week total"]:
     compositing_y.append(i)
     
+print(intro_y)
+    
+arr_intro_x = np.array(intro_x)
+arr_intro_y = np.array(intro_y)
+arr_verse1_x = np.array(verse1_x)
+arr_verse1_y = np.array(verse1_y)
+arr_solo_x = np.array(solo_x)
+arr_solo_y = np.array(solo_y)
+arr_verse2_x = np.array(verse2_x)
+arr_verse2_y = np.array(verse2_y)
+arr_outro_x = np.array(outro_x)
+arr_outro_y = np.array(outro_y)
 arr_compositing_x = np.array(compositing_x)
 arr_compositing_y = np.array(compositing_y)
 
-compositing_xnew = np.linspace(arr_compositing_x.min(), arr_compositing_x.max(), 200) 
+intro_xnew = np.linspace(arr_intro_x.min(), arr_intro_x.max(), 200) 
+spl = make_interp_spline(arr_intro_x, arr_intro_y, k=2)
+intro_y_smooth = spl(intro_xnew)
 
+verse1_xnew = np.linspace(arr_verse1_x.min(), arr_verse1_x.max(), 200) 
+spl = make_interp_spline(arr_verse1_x, arr_verse1_y, k=2)
+verse1_y_smooth = spl(verse1_xnew)
+
+solo_xnew = np.linspace(arr_solo_x.min(), arr_solo_x.max(), 200) 
+spl = make_interp_spline(arr_solo_x, arr_solo_y, k=2)
+solo_y_smooth = spl(solo_xnew)
+
+verse2_xnew = np.linspace(arr_verse2_x.min(), arr_verse2_x.max(), 200) 
+spl = make_interp_spline(arr_verse2_x, arr_verse2_y, k=2)
+verse2_y_smooth = spl(verse2_xnew)
+
+outro_xnew = np.linspace(arr_outro_x.min(), arr_outro_x.max(), 200) 
+spl = make_interp_spline(arr_outro_x, arr_outro_y, k=2)
+outro_y_smooth = spl(outro_xnew)
+
+compositing_xnew = np.linspace(arr_compositing_x.min(), arr_compositing_x.max(), 200) 
 spl = make_interp_spline(arr_compositing_x, arr_compositing_y, k=2)
 compositing_y_smooth = spl(compositing_xnew)
 
 
-# In[84]:
+# In[110]:
 
 
 # Plotting Sections Over Year
